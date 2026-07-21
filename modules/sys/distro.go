@@ -7,14 +7,13 @@ import (
 )
 
 type info struct {
-	NAME     string
-	PRNAME   string
-	BUILD_ID string
-	LOGO     string
+	Name    string
+	PrName  string
+	BuildID string
 }
 
 func GetDistribution() info {
-	infor := info{NAME: "Unknown OS", PRNAME: "Unknown", BUILD_ID: "", LOGO: "base"}
+	infor := info{Name: "Unknown OS", PrName: "Unknown", BuildID: ""}
 	file, err := os.Open("/etc/os-release")
 	if err != nil {
 		return infor
@@ -36,13 +35,11 @@ func GetDistribution() info {
 
 		switch key {
 		case "NAME":
-			infor.NAME = value
+			infor.Name = value
 		case "PRETTY_NAME":
-			infor.PRNAME = value
+			infor.PrName = value
 		case "BUILD_ID":
-			infor.BUILD_ID = value
-		case "LOGO":
-			infor.LOGO = value
+			infor.BuildID = value
 		}
 	}
 
