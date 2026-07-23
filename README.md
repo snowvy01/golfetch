@@ -4,22 +4,29 @@ Golfetch is a [neofetch](https://github.com/dylanaraps/neofetch)-like tool for f
 
 > Note: golfetch is only tested on x86_64 platforms by maintainer (me). It will most likely run on other platforms, but there is no guarantee.
 
-## Installation:
+## Installation
 
 ### Manual build
+
 ```bash
 git clone https://github.com/snowvy01/golfetch.git # clone the repo
 cd golfetch
 go build -trimpath -buildmode=pie -ldflags="-s -w" -o golfetch # compile it
 ./golfetch # now execute!
 ```
+
 ### Arch Linux (AUR)
+
 you can install it by using your favorite AUR helper
+
 ```bash
 yay -S golfetch-git
 ```
+
 ### Configuration
-To change the program configuration, modify the main.go file and compile the program:
+
+To change the program configuration or logo, modify the main.go or modules/logo/logo.txt files and compile the program:
+
 ```bash
 go build -trimpath -buildmode=pie -ldflags="-s -w" -o golfetch
 ```
