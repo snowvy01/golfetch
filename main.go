@@ -16,14 +16,28 @@ import (
 	"golfetch/modules/user"
 )
 
+// Ansi escapes colors
 const (
-	Reset = "\033[0m"
-	//Red     = "\033[31m"
-	//Green = "\033[32m"
-	//Yellow  = "\033[33m"
-	//Blue    = "\033[34m"
+	// Normal colors
+	Reset   = "\033[0m"
+	Black   = "\033[30m"
+	Red     = "\033[31m"
+	Green   = "\033[32m"
+	Yellow  = "\033[33m"
+	Blue    = "\033[34m"
 	Magenta = "\033[35m"
 	Cyan    = "\033[36m"
+	White   = "\033[37m"
+	Default = "\033[38m"
+	// Brighter colors
+	bBlack   = "\x1b[90m"
+	bRed     = "\x1b[91m"
+	bGreen   = "\x1b[92m"
+	bYellow  = "\x1b[93m"
+	bBlue    = "\x1b[94m"
+	bMagenta = "\x1b[95m"
+	bCyan    = "\x1b[96m"
+	bWhite   = "\x1b[97m"
 )
 
 func main() {
@@ -47,7 +61,7 @@ func main() {
 
 	var infoLines []string
 
-	usrhost := fmt.Sprintf("%s%s%s@%s%s%s", Magenta, userinfo[0], Reset, Magenta, hostname, Reset) // user and hostname spaced by @
+	usrhost := fmt.Sprintf("%s%s%s@%s%s%s", Yellow, userinfo[0], Reset, Yellow, hostname, Reset) // user and hostname spaced by @
 	spacer := strings.Repeat("-", len(userinfo[0]+hostname)+1)
 	infoLines = append(
 		infoLines,
@@ -69,6 +83,9 @@ func main() {
 	for _, mount := range mounts {
 		infoLines = append(infoLines, fmt.Sprintf("~ %sDrive (%s - %s)%s: %s", Cyan, mount.Device, mount.MountPoint, Reset, mount.FSType))
 	}
+	infoLines = append(infoLines, "",
+		fmt.Sprintf("%s███%s███%s███%s███%s███%s███%s███%s███%s", Black, Red, Green, Yellow, Blue, Magenta, Cyan, White, Reset),
+		fmt.Sprintf("%s███%s███%s███%s███%s███%s███%s███%s███%s", bBlack, bRed, bGreen, bYellow, bBlue, bMagenta, bCyan, bWhite, Reset))
 
 	logoLines := logo.GetLogo()
 	maxLogoWidth := 0
@@ -80,11 +97,9 @@ func main() {
 
 	padding := "  "
 
-	maxLines := len(logoLines)
-	if len(infoLines) > maxLines {
-		maxLines = len(infoLines)
-	}
-	for i := 0; i < maxLines; i++ {
+	maxLines := max(len(logoLines), len(infoLines))
+
+	for i := range maxLines {
 		logoPart := ""
 		infoPart := ""
 
