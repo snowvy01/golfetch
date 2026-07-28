@@ -37,6 +37,9 @@ func GetFSSystems() []FSInfo {
 		if !strings.HasPrefix(device, "/dev/") {
 			continue
 		}
+		if strings.HasPrefix(mountedTo, "/efi") {
+			continue
+		}
 		if fstype == "devtmpfs" {
 			continue
 		}
