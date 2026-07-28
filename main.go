@@ -61,27 +61,27 @@ func main() {
 
 	var infoLines []string
 
-	usrhost := fmt.Sprintf("%s%s%s@%s%s%s", Yellow, userinfo[0], Reset, Yellow, hostname, Reset) // user and hostname spaced by @
+	usrhost := fmt.Sprintf("%s%s%s@%s%s%s", bCyan, userinfo[0], Cyan, bCyan, hostname, Reset) // user and hostname spaced by @
 	spacer := strings.Repeat("-", len(userinfo[0]+hostname)+1)
 	infoLines = append(
 		infoLines,
 		usrhost,
 		spacer,
-		fmt.Sprintf("~ %sOS%s: %s (%s)", Cyan, Reset, osinfo.Name, osinfo.BuildID),
-		fmt.Sprintf("~ %sHost%s: %s", Cyan, Reset, realhost),
+		fmt.Sprintf("~ %sOS%s: %s - %s", Cyan, Reset, osinfo.Name, osinfo.BuildID),
+		fmt.Sprintf("~ %sHost%s: %s at %s", Cyan, Reset, userinfo[1], realhost),
 		fmt.Sprintf("~ %sKernel%s: %s", Cyan, Reset, kernel),
 		fmt.Sprintf("~ %sUptime%s: %s", Cyan, Reset, uptime),
 		fmt.Sprintf("~ %sPackages%s: %s", Cyan, Reset, pkgs),
 		fmt.Sprintf("~ %sShell%s: %s %s", Cyan, Reset, shell[0], shell[1]),
 		fmt.Sprintf("~ %sCPU%s: %s", Cyan, Reset, cpuName),
 		fmt.Sprintf("~ %sMemory%s: %s", Cyan, Reset, memUsage),
-		fmt.Sprintf("~ %sSwap%s: %.2f GiB / %.2f (%s)", Cyan, Reset, swapInfo.Used, swapInfo.Size, swapInfo.Name),
+		fmt.Sprintf("~ %sSwap%s: %.2f GiB / %.2f - %s", Cyan, Reset, swapInfo.Used, swapInfo.Size, swapInfo.Name),
 		fmt.Sprintf("~ %sHome%s: %s", Cyan, Reset, home),
 		fmt.Sprintf("~ %sPWD%s: %s", Cyan, Reset, pwd),
 		fmt.Sprintf("~ %sLocale%s: %s", Cyan, Reset, locale),
 	)
 	for _, mount := range mounts {
-		infoLines = append(infoLines, fmt.Sprintf("~ %sDrive (%s - %s)%s: %s", Cyan, mount.Device, mount.MountPoint, Reset, mount.FSType))
+		infoLines = append(infoLines, fmt.Sprintf("~ %sDrive (%s)%s: %s - %s", Cyan, mount.MountPoint, Reset, mount.Device, mount.FSType))
 	}
 	infoLines = append(infoLines, "",
 		fmt.Sprintf("%s███%s███%s███%s███%s███%s███%s███%s███%s", Black, Red, Green, Yellow, Blue, Magenta, Cyan, White, Reset),
