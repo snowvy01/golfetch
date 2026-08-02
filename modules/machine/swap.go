@@ -8,9 +8,10 @@ import (
 )
 
 type Swapinfo struct {
-	Name string
-	Size float64
-	Used float64
+	Name    string
+	Size    float64
+	Used    float64
+	Percent string
 }
 
 func GetSwap() *Swapinfo {
@@ -35,9 +36,12 @@ func GetSwap() *Swapinfo {
 	sizeKB, _ := strconv.ParseFloat(fields[2], 64)
 	usedKB, _ := strconv.ParseFloat(fields[3], 64)
 
+	percent := strconv.FormatFloat((usedKB/sizeKB)*100, 'f', 0, 64) + "%"
+
 	return &Swapinfo{
-		Name: fields[0],
-		Size: sizeKB / (1024 * 1024),
-		Used: usedKB / (1024 * 1024),
+		Name:    fields[0],
+		Size:    sizeKB / (1024 * 1024),
+		Used:    usedKB / (1024 * 1024),
+		Percent: percent,
 	}
 }
