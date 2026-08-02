@@ -28,7 +28,6 @@ const (
 	Magenta = "\033[35m"
 	Cyan    = "\033[36m"
 	White   = "\033[37m"
-	Default = "\033[38m"
 	// Brighter colors
 	bBlack   = "\x1b[90m"
 	bRed     = "\x1b[91m"
