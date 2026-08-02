@@ -53,6 +53,7 @@ func main() {
 	userinfo := user.GetUserInfo()
 	hostname := user.GetHostname()
 	realhost := user.GetRealHostname()
+	sesName, sesType := user.GetSession()
 	shell := user.GetShell()
 	home := user.GetHome()
 	pwd := user.GetPWD()
@@ -72,6 +73,7 @@ func main() {
 		fmt.Sprintf("~ %sKernel%s: %s", Cyan, Reset, kernel),
 		fmt.Sprintf("~ %sUptime%s: %s", Cyan, Reset, uptime),
 		fmt.Sprintf("~ %sPackages%s: %s", Cyan, Reset, pkgs),
+		fmt.Sprintf("~ %sSession%s: %s %s", Cyan, Reset, sesName, sesType),
 		fmt.Sprintf("~ %sShell%s: %s %s", Cyan, Reset, shell[0], shell[1]),
 		fmt.Sprintf("~ %sCPU%s: %s", Cyan, Reset, cpuName),
 		fmt.Sprintf("~ %sMemory%s: %s", Cyan, Reset, memUsage),
