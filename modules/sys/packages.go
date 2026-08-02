@@ -16,5 +16,5 @@ func GetPacmanPkgs() string {
 			count++
 		}
 	}
-	return strconv.Itoa(count) + " (pacman)"
+	return strconv.Itoa(count) + " from Pacman"
 }
