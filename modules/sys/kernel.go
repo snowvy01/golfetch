@@ -10,5 +10,11 @@ func GetKernelVer() string {
 	if err != nil {
 		return "unknown"
 	}
-	return strings.TrimSpace(string(krnl))
+	kernel := strings.TrimSpace(string(krnl))
+	systype, err := os.ReadFile("/proc/sys/kernel/ostype")
+	if err != nil {
+		return kernel
+	}
+	systemtype := strings.TrimSpace(string(systype))
+	return systemtype + " " + kernel
 }
