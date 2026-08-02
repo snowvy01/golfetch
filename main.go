@@ -75,13 +75,16 @@ func main() {
 		fmt.Sprintf("~ %sShell%s: %s %s", Cyan, Reset, shell[0], shell[1]),
 		fmt.Sprintf("~ %sCPU%s: %s", Cyan, Reset, cpuName),
 		fmt.Sprintf("~ %sMemory%s: %s", Cyan, Reset, memUsage),
-		fmt.Sprintf("~ %sSwap%s: %.2f GiB / %.2f - %s", Cyan, Reset, swapInfo.Used, swapInfo.Size, swapInfo.Name),
+		fmt.Sprintf("~ %sSwap (%s)%s: %.2f GiB / %.2f GiB (%s)", Cyan, swapInfo.Name, Reset, swapInfo.Used, swapInfo.Size, swapInfo.Percent),
 		fmt.Sprintf("~ %sHome%s: %s", Cyan, Reset, home),
 		fmt.Sprintf("~ %sPWD%s: %s", Cyan, Reset, pwd),
 		fmt.Sprintf("~ %sLocale%s: %s", Cyan, Reset, locale),
 	)
-	for _, mount := range mounts {
-		infoLines = append(infoLines, fmt.Sprintf("~ %sDrive (%s)%s: %s - %s", Cyan, mount.MountPoint, Reset, mount.Device, mount.FSType))
+	if mounts != nil {
+		for _, mount := range mounts {
+			infoLines = append(infoLines, fmt.Sprintf("~ %sDrive (%s, %s)%s: %.2f GiB / %.2f GiB (%.0f%%)",
+				Cyan, mount.MountPoint, mount.FSType, Reset, mount.Used, mount.Total, mount.Percentage))
+		}
 	}
 	infoLines = append(infoLines, "",
 		fmt.Sprintf("%s███%s███%s███%s███%s███%s███%s███%s███%s", Black, Red, Green, Yellow, Blue, Magenta, Cyan, White, Reset),
