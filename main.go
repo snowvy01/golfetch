@@ -76,15 +76,15 @@ func main() {
 		fmt.Sprintf("~ %sShell%s: %s %s", Cyan, Reset, shell[0], shell[1]),
 		fmt.Sprintf("~ %sCPU%s: %s", Cyan, Reset, cpuName),
 		fmt.Sprintf("~ %sMemory%s: %s", Cyan, Reset, memUsage),
-		fmt.Sprintf("~ %sSwap (%s)%s: %.2f GiB / %.2f GiB (%s)", Cyan, swapInfo.Name, Reset, swapInfo.Used, swapInfo.Size, swapInfo.Percent),
+		fmt.Sprintf("~ %sSwap (%s)%s: %.2f GiB / %.2f GiB (%s%s%s)", Cyan, swapInfo.Name, Reset, swapInfo.Used, swapInfo.Size, Magenta, swapInfo.Percent, Reset),
 		fmt.Sprintf("~ %sHome%s: %s", Cyan, Reset, home),
 		fmt.Sprintf("~ %sPWD%s: %s", Cyan, Reset, pwd),
 		fmt.Sprintf("~ %sLocale%s: %s", Cyan, Reset, locale),
 	)
 	if mounts != nil {
 		for _, mount := range mounts {
-			infoLines = append(infoLines, fmt.Sprintf("~ %sDrive (%s, %s)%s: %.2f GiB / %.2f GiB (%.0f%%)",
-				Cyan, mount.MountPoint, mount.FSType, Reset, mount.Used, mount.Total, mount.Percentage))
+			infoLines = append(infoLines, fmt.Sprintf("~ %sDrive (%s, %s)%s: %.2f GiB / %.2f GiB (%s%.0f%%%s)",
+				Cyan, mount.MountPoint, mount.FSType, Reset, mount.Used, mount.Total, Magenta, mount.Percentage, Reset))
 		}
 	}
 	infoLines = append(infoLines, "",
