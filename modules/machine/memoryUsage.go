@@ -43,7 +43,7 @@ func GetMemoryUsage() string {
 	usedGiB := float64(used) / 1024 / 1024
 	percent := (float64(used) / float64(total)) * 100
 
-	return fmt.Sprintf("%.2f GiB / %.2f GiB (%.0f%%)", usedGiB, totalGiB, percent)
+	return fmt.Sprintf("%.2f GiB / %.2f GiB (%s%.0f%%%s)", usedGiB, totalGiB, "\033[35m", percent, "\033[0m")
 }
 
 func parseMemLine(line string) uint64 {
