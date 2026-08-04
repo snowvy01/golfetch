@@ -16,7 +16,7 @@ import (
 	"golfetch/modules/user"
 )
 
-// Ansi escapes colors
+// Ansi escapes
 const (
 	// Normal colors
 	Reset   = "\033[0m"
@@ -37,6 +37,9 @@ const (
 	bMagenta = "\x1b[95m"
 	bCyan    = "\x1b[96m"
 	bWhite   = "\x1b[97m"
+	// Text styles
+	Bold   = "\033[1m" // Bold text. To reset it, use Reset string
+	Italic = "\x1b[3m" // Italic text.
 )
 
 func main() {
@@ -61,30 +64,30 @@ func main() {
 
 	var infoLines []string
 
-	usrhost := fmt.Sprintf("%s%s%s@%s%s%s", bCyan, userinfo[0], Cyan, bCyan, hostname, Reset) // user and hostname spaced by @
+	usrhost := fmt.Sprintf("%s%s%s@%s%s%s", Italic+bCyan, userinfo[0], Cyan, Italic+bCyan, hostname, Reset) // user and hostname spaced by @
 	spacer := strings.Repeat("-", len(userinfo[0]+hostname)+1)
 	infoLines = append(
 		infoLines,
 		usrhost,
 		spacer,
-		fmt.Sprintf("~ %sOS%s: %s - %s", Cyan, Reset, osinfo.Name, osinfo.BuildID),
-		fmt.Sprintf("~ %sHost%s: %s at %s", Cyan, Reset, userinfo[1], realhost),
-		fmt.Sprintf("~ %sKernel%s: %s", Cyan, Reset, kernel),
-		fmt.Sprintf("~ %sUptime%s: %s", Cyan, Reset, uptime),
-		fmt.Sprintf("~ %sPackages%s: %s", Cyan, Reset, pkgs),
-		fmt.Sprintf("~ %sSession%s: %s %s", Cyan, Reset, sesName, sesType),
-		fmt.Sprintf("~ %sShell%s: %s %s", Cyan, Reset, shell[0], shell[1]),
-		fmt.Sprintf("~ %sCPU%s: %s", Cyan, Reset, cpuName),
-		fmt.Sprintf("~ %sMemory%s: %s", Cyan, Reset, memUsage),
-		fmt.Sprintf("~ %sSwap (%s)%s: %.2f GiB / %.2f GiB (%s%s%s)", Cyan, swapInfo.Name, Reset, swapInfo.Used, swapInfo.Size, Magenta, swapInfo.Percent, Reset),
-		fmt.Sprintf("~ %sHome%s: %s", Cyan, Reset, home),
-		fmt.Sprintf("~ %sPWD%s: %s", Cyan, Reset, pwd),
-		fmt.Sprintf("~ %sLocale%s: %s", Cyan, Reset, locale),
+		fmt.Sprintf("~ %sOS:%s %s - %s", Bold+Cyan, Reset, osinfo.Name, osinfo.BuildID),
+		fmt.Sprintf("~ %sHost:%s %s at %s", Bold+Cyan, Reset, userinfo[1], realhost),
+		fmt.Sprintf("~ %sKernel:%s %s", Bold+Cyan, Reset, kernel),
+		fmt.Sprintf("~ %sUptime:%s %s", Bold+Cyan, Reset, uptime),
+		fmt.Sprintf("~ %sPackages:%s %s", Bold+Cyan, Reset, pkgs),
+		fmt.Sprintf("~ %sSession:%s %s %s", Bold+Cyan, Reset, sesName, sesType),
+		fmt.Sprintf("~ %sShell:%s %s %s", Bold+Cyan, Reset, shell[0], shell[1]),
+		fmt.Sprintf("~ %sCPU:%s %s", Bold+Cyan, Reset, cpuName),
+		fmt.Sprintf("~ %sMemory:%s %s", Bold+Cyan, Reset, memUsage),
+		fmt.Sprintf("~ %sSwap (%s):%s %.2f GiB / %.2f GiB (%s%s%s)", Bold+Cyan, swapInfo.Name, Reset, swapInfo.Used, swapInfo.Size, Magenta, swapInfo.Percent, Reset),
+		fmt.Sprintf("~ %sHome:%s %s", Bold+Cyan, Reset, home),
+		fmt.Sprintf("~ %sPWD:%s %s", Bold+Cyan, Reset, pwd),
+		fmt.Sprintf("~ %sLocale:%s %s", Bold+Cyan, Reset, locale),
 	)
 	if mounts != nil {
 		for _, mount := range mounts {
-			infoLines = append(infoLines, fmt.Sprintf("~ %sDrive (%s, %s)%s: %.2f GiB / %.2f GiB (%s%.0f%%%s)",
-				Cyan, mount.MountPoint, mount.FSType, Reset, mount.Used, mount.Total, Magenta, mount.Percentage, Reset))
+			infoLines = append(infoLines, fmt.Sprintf("~ %sDrive (%s, %s):%s %.2f GiB / %.2f GiB (%s%.0f%%%s)",
+				Bold+Cyan, mount.MountPoint, mount.FSType, Reset, mount.Used, mount.Total, Magenta, mount.Percentage, Reset))
 		}
 	}
 	infoLines = append(infoLines, "",
