@@ -1,7 +1,6 @@
 package user
 
 import (
-	"fmt"
 	"os"
 	"strings"
 )
@@ -9,21 +8,19 @@ import (
 func GetHostname() string {
 	hostname, err := os.Hostname()
 	if err != nil {
-		return "unknown"
+		content, err := os.ReadFile("/etc/hostname")
+		if err != nil {
+			return "Unknown"
+		}
+		return strings.TrimSpace(string(content))
 	}
 	return hostname
 }
 
 func GetRealHostname() string {
-	mainName, err := os.ReadFile("/sys/class/dmi/id/product_name")
-	normalmainName := strings.TrimSpace(string(mainName))
-	if err != nil || normalmainName == "" {
+	content, err := os.ReadFile("/sys/class/dmi/id/product_name")
+	if err != nil || string(content) == "" {
 		return "unknown"
 	}
-	verName, err := os.ReadFile("/sys/class/dmi/id/product_version")
-	normalverName := strings.TrimSpace(string(verName))
-	if err != nil || normalverName == "" {
-		return normalmainName
-	}
-	return fmt.Sprintf("%s (%s)", normalmainName, normalverName)
+	return strings.TrimSpace(string(content))
 }
