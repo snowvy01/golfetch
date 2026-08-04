@@ -70,7 +70,7 @@ func main() {
 		infoLines,
 		usrhost,
 		spacer,
-		fmt.Sprintf("~ %sOS:%s %s - %s", Bold+Cyan, Reset, osinfo.Name, osinfo.BuildID),
+		fmt.Sprintf("~ %sOS:%s %s %s - %s", Bold+Cyan, Reset, osinfo.PrName, osinfo.Arch, osinfo.BuildID),
 		fmt.Sprintf("~ %sHost:%s %s at %s", Bold+Cyan, Reset, userinfo[1], realhost),
 		fmt.Sprintf("~ %sKernel:%s %s", Bold+Cyan, Reset, kernel),
 		fmt.Sprintf("~ %sUptime:%s %s", Bold+Cyan, Reset, uptime),
