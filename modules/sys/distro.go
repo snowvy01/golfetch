@@ -10,15 +10,23 @@ type info struct {
 	Name    string
 	PrName  string
 	BuildID string
+	Arch    string
 }
 
 func GetDistribution() info {
-	infor := info{Name: "Unknown OS", PrName: "Unknown", BuildID: ""}
+	infor := info{Name: "Unknown OS", PrName: "Unknown", BuildID: "", Arch: ""}
 	file, err := os.Open("/etc/os-release")
 	if err != nil {
 		return infor
 	}
-	defer file.Close()
+	defer func() {
+		closeErr := file.Close()
+		if closeErr != nil {
+			if err != nil {
+				err = closeErr
+			}
+		}
+	}()
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
@@ -46,5 +54,16 @@ func GetDistribution() info {
 	if err := scanner.Err(); err != nil {
 		return infor
 	}
+
+	infor.Arch = getArch()
+
 	return infor
+}
+
+func getArch() string {
+	content, err := os.ReadFile("/proc/sys/kernel/arch")
+	if err != nil {
+		return ""
+	}
+	return strings.TrimSpace(string(content))
 }
