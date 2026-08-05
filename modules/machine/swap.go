@@ -17,7 +17,12 @@ type Swapinfo struct {
 func GetSwap() *Swapinfo {
 	file, err := os.Open("/proc/swaps")
 	if err != nil {
-		return nil
+		return &Swapinfo{
+			Name:    "No swap",
+			Size:    0,
+			Used:    0,
+			Percent: "0%",
+		}
 	}
 	defer file.Close()
 
@@ -26,11 +31,21 @@ func GetSwap() *Swapinfo {
 		_ = scanner.Text()
 	}
 	if !scanner.Scan() {
-		return nil
+		return &Swapinfo{
+			Name:    "No swap",
+			Size:    0,
+			Used:    0,
+			Percent: "0%",
+		}
 	}
 	fields := strings.Fields(scanner.Text())
 	if len(fields) < 4 {
-		return nil
+		return &Swapinfo{
+			Name:    "No swap",
+			Size:    0,
+			Used:    0,
+			Percent: "0%",
+		}
 	}
 
 	sizeKB, _ := strconv.ParseFloat(fields[2], 64)
