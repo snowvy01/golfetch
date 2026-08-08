@@ -76,7 +76,7 @@ func main() {
 		fmt.Sprintf("~ %sUptime:%s %s", Bold+Cyan, Reset, uptime),
 		fmt.Sprintf("~ %sPackages:%s %s", Bold+Cyan, Reset, pkgs),
 		fmt.Sprintf("~ %sSession:%s %s %s", Bold+Cyan, Reset, sesName, sesType),
-		fmt.Sprintf("~ %sShell:%s %s %s", Bold+Cyan, Reset, shell[0], shell[1]),
+		fmt.Sprintf("~ %sShell:%s %s", Bold+Cyan, Reset, shell),
 		fmt.Sprintf("~ %sCPU:%s %s", Bold+Cyan, Reset, cpuName),
 		fmt.Sprintf("~ %sMemory:%s %s", Bold+Cyan, Reset, memUsage),
 		fmt.Sprintf("~ %sSwap (%s):%s %.2f GiB / %.2f GiB (%s%s%s)", Bold+Cyan, swapInfo.Name, Reset, swapInfo.Used, swapInfo.Size, Magenta, swapInfo.Percent, Reset),
