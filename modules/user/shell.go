@@ -2,36 +2,31 @@ package user
 
 import (
 	"os"
-	"os/exec"
 	"strings"
 )
 
-func GetShell() []string {
-	// Shell name part:
-	var shell []string
-	shellPath := os.Getenv("SHELL")
-	if shellPath == "" {
-		return append(shell, "unknown", "")
+func GetShell() string {
+	shellpath := os.Getenv("SHELL")
+	if shellpath == "" {
+		return "Unknown"
 	}
-	parts := strings.Split(shellPath, "/")
-	shellName := parts[len(parts)-1]
 
-	// Shell version part:
-	cmd := exec.Command(shellName, "--version")
-	output, err := cmd.Output()
+	shellname := shellpath[strings.LastIndex(shellpath, "/")+1:]
+	files, err := os.ReadDir("/var/lib/pacman/local")
 	if err != nil {
-		return append(shell, shellName, "")
+		return shellname
 	}
-	outStr := string(output)
-	fields := strings.Fields(outStr)
 
-	for _, field := range fields {
-		if len(field) > 0 && field[0] >= '0' && field[0] <= '9' {
-			if idx := strings.Index(field, "("); idx != -1 {
-				return append(shell, shellName, field[:idx])
+	prefix := shellname + "-"
+	for _, file := range files {
+		name := file.Name()
+		if file.IsDir() && strings.HasPrefix(name, prefix) {
+			ver := name[len(prefix):]
+			if lastDash := strings.LastIndex(ver, "-"); lastDash != -1 {
+				ver = ver[:lastDash]
 			}
-			return append(shell, shellName, field)
+			return shellname + " " + ver
 		}
 	}
-	return append(shell, shellName, "")
+	return shellname
 }
