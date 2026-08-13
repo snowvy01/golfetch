@@ -28,5 +28,8 @@ yay -S golfetch-git
 To change the program configuration or logo, modify the main.go or modules/logo/logo.txt files and compile the program:
 
 ```bash
+# compile with more optimizations
 go build -trimpath -buildmode=pie -ldflags="-s -w" -o golfetch
+# or with smaller optimization
+go build -o golfetch
 ```
