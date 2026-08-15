@@ -50,7 +50,7 @@ func main() {
 
 	cpuName := machine.GetCPU()
 	memUsage := machine.GetMemoryUsage()
-	swapInfo := machine.GetSwap()
+	swapsInfo := machine.GetSwap()
 
 	userinfo := user.GetUserInfo()
 	hostname := user.GetHostname()
@@ -70,7 +70,7 @@ func main() {
 		infoLines,
 		usrhost,
 		spacer,
-		fmt.Sprintf("~ %sOS:%s %s %s - %s", Bold+Cyan, Reset, osinfo.PrName, osinfo.Arch, osinfo.BuildID),
+		fmt.Sprintf("~ %sOS:%s %s - %s %s(%s)%s", Bold+Cyan, Reset, osinfo.PrName, osinfo.BuildID, Magenta, osinfo.Arch, Reset),
 		fmt.Sprintf("~ %sHost:%s %s at %s", Bold+Cyan, Reset, userinfo[1], realhost),
 		fmt.Sprintf("~ %sKernel:%s %s", Bold+Cyan, Reset, kernel),
 		fmt.Sprintf("~ %sUptime:%s %s", Bold+Cyan, Reset, uptime),
@@ -78,17 +78,24 @@ func main() {
 		fmt.Sprintf("~ %sSession:%s %s %s", Bold+Cyan, Reset, sesName, sesType),
 		fmt.Sprintf("~ %sShell:%s %s", Bold+Cyan, Reset, shell),
 		fmt.Sprintf("~ %sCPU:%s %s", Bold+Cyan, Reset, cpuName),
-		fmt.Sprintf("~ %sMemory:%s %s", Bold+Cyan, Reset, memUsage),
-		fmt.Sprintf("~ %sSwap (%s):%s %.2f GiB / %.2f GiB (%s%s%s)", Bold+Cyan, swapInfo.Name, Reset, swapInfo.Used, swapInfo.Size, Magenta, swapInfo.Percent, Reset),
+		fmt.Sprintf("~ %sMemory:%s %s", Bold+Cyan, Reset, memUsage))
+	if len(swapsInfo) == 0 {
+		infoLines = append(infoLines, fmt.Sprintf("~ %sSwap:%s %sDisabled%s", Bold+Cyan, Reset, bRed, Reset))
+	} else {
+		for _, swap := range swapsInfo {
+			infoLines = append(infoLines, fmt.Sprintf("~ %sSwap %s(%s)%s:%s %.2f GiB / %.2f GiB %s(%s)%s",
+				Bold+Cyan, Magenta, swap.Name, Reset+Bold+Cyan, Reset, swap.Used, swap.Size, Magenta, swap.Percent, Reset))
+		}
+	}
+	infoLines = append(
+		infoLines,
 		fmt.Sprintf("~ %sHome:%s %s", Bold+Cyan, Reset, home),
 		fmt.Sprintf("~ %sPWD:%s %s", Bold+Cyan, Reset, pwd),
 		fmt.Sprintf("~ %sLocale:%s %s", Bold+Cyan, Reset, locale),
 	)
-	if mounts != nil {
-		for _, mount := range mounts {
-			infoLines = append(infoLines, fmt.Sprintf("~ %sDrive (%s, %s):%s %.2f GiB / %.2f GiB (%s%.0f%%%s)",
-				Bold+Cyan, mount.MountPoint, mount.FSType, Reset, mount.Used, mount.Total, Magenta, mount.Percentage, Reset))
-		}
+	for _, mount := range mounts {
+		infoLines = append(infoLines, fmt.Sprintf("~ %sDrive %s(%s, %s)%s:%s %.2f GiB / %.2f GiB %s(%.0f%%)%s",
+			Bold+Cyan, Magenta, mount.MountPoint, mount.FSType, Reset+Cyan+Bold, Reset, mount.Used, mount.Total, Magenta, mount.Percentage, Reset))
 	}
 	infoLines = append(infoLines, "",
 		fmt.Sprintf("%s███%s███%s███%s███%s███%s███%s███%s███%s", Black, Red, Green, Yellow, Blue, Magenta, Cyan, White, Reset),
