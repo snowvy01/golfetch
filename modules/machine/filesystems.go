@@ -3,6 +3,7 @@ package machine
 import (
 	"bufio"
 	"os"
+	"regexp"
 	"strings"
 	"syscall"
 )
@@ -19,7 +20,7 @@ type FSInfo struct {
 func GetFSSystems() []FSInfo {
 	file, err := os.Open("/proc/mounts")
 	if err != nil {
-		return nil
+		return []FSInfo{}
 	}
 	defer file.Close()
 
@@ -41,7 +42,10 @@ func GetFSSystems() []FSInfo {
 		if !strings.HasPrefix(device, "/dev/") {
 			continue
 		}
-		if strings.HasPrefix(mountedTo, "/efi") {
+
+		re := regexp.MustCompile(`^(/efi|/apex|/bootstrap-apex|/cache|/efs|/product)`)
+
+		if re.MatchString(mountedTo) {
 			continue
 		}
 		if fstype == "devtmpfs" {
@@ -77,7 +81,7 @@ func GetFSSystems() []FSInfo {
 		})
 	}
 	if scanner.Err() != nil {
-		return nil
+		return []FSInfo{}
 	}
 	return mounts
 }
