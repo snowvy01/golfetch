@@ -2,6 +2,7 @@ package machine
 
 import (
 	"bufio"
+	"fmt"
 	"os"
 	"strconv"
 	"strings"
@@ -14,49 +15,52 @@ type Swapinfo struct {
 	Percent string
 }
 
-func GetSwap() *Swapinfo {
+func GetSwap() []Swapinfo {
 	file, err := os.Open("/proc/swaps")
 	if err != nil {
-		return &Swapinfo{
-			Name:    "No swap",
-			Size:    0,
-			Used:    0,
-			Percent: "0%",
-		}
+		return []Swapinfo{}
 	}
 	defer file.Close()
 
+	var swaps []Swapinfo
 	scanner := bufio.NewScanner(file)
-	if scanner.Scan() {
-		_ = scanner.Text()
-	}
+
+	// Skip the header line ("Filename Type Size Used Priority")
 	if !scanner.Scan() {
-		return &Swapinfo{
-			Name:    "No swap",
-			Size:    0,
-			Used:    0,
-			Percent: "0%",
+		return []Swapinfo{}
+	}
+
+	for scanner.Scan() {
+		line := scanner.Text()
+		fields := strings.Fields(line)
+		if len(fields) < 4 {
+			continue
 		}
-	}
-	fields := strings.Fields(scanner.Text())
-	if len(fields) < 4 {
-		return &Swapinfo{
-			Name:    "No swap",
-			Size:    0,
-			Used:    0,
-			Percent: "0%",
+
+		sizeKB, err1 := strconv.ParseFloat(fields[2], 64)
+		usedKB, err2 := strconv.ParseFloat(fields[3], 64)
+		if err1 != nil || err2 != nil {
+			continue
 		}
+
+		var percent string
+		if sizeKB > 0 {
+			percent = fmt.Sprintf("%.0f%%", (usedKB/sizeKB)*100)
+		} else {
+			percent = "0%"
+		}
+
+		swaps = append(swaps, Swapinfo{
+			Name:    fields[0],
+			Size:    sizeKB / (1024 * 1024), // Converts KB to GB
+			Used:    usedKB / (1024 * 1024), // Converts KB to GB
+			Percent: percent,
+		})
 	}
 
-	sizeKB, _ := strconv.ParseFloat(fields[2], 64)
-	usedKB, _ := strconv.ParseFloat(fields[3], 64)
-
-	percent := strconv.FormatFloat((usedKB/sizeKB)*100, 'f', 0, 64) + "%"
-
-	return &Swapinfo{
-		Name:    fields[0],
-		Size:    sizeKB / (1024 * 1024),
-		Used:    usedKB / (1024 * 1024),
-		Percent: percent,
+	if scanner.Err() != nil {
+		return []Swapinfo{}
 	}
+
+	return swaps
 }
