@@ -1,56 +1,69 @@
 package machine
 
 import (
-	"bufio"
+	"bytes"
 	"fmt"
-	"os"
-	"strconv"
-	"strings"
+	"syscall"
 )
 
 func GetMemoryUsage() string {
-	file, err := os.Open("/proc/meminfo")
+	var buf [2048]byte
+
+	fd, err := syscall.Open("/proc/meminfo", syscall.O_RDONLY, 0)
 	if err != nil {
 		return "unknown"
 	}
-	defer file.Close()
+	defer syscall.Close(fd)
 
-	var total, available uint64
-	scanner := bufio.NewScanner(file)
-
-	for scanner.Scan() {
-		line := scanner.Text()
-		if strings.HasPrefix(line, "MemTotal:") {
-			total = parseMemLine(line)
-		} else if strings.HasPrefix(line, "MemAvailable:") {
-			available = parseMemLine(line)
-		}
-		if total > 0 && available > 0 {
-			break
-		}
-	}
-
-	if err := scanner.Err(); err != nil {
+	n, err := syscall.Read(fd, buf[:])
+	if err != nil || n == 0 {
 		return "unknown"
 	}
 
-	if total == 0 {
-		return "unknown"
+	data := buf[:n]
+
+	totalKB := parseMemBytes(data, []byte("MemTotal:"))
+	availableKB := parseMemBytes(data, []byte("MemAvailable:"))
+
+	if totalKB == 0 || availableKB == 0 || totalKB < availableKB {
+		return "Unknown"
 	}
-	used := total - available
 
-	totalGiB := float64(total) / 1024 / 1024
-	usedGiB := float64(used) / 1024 / 1024
-	percent := (float64(used) / float64(total)) * 100
+	usedKB := totalKB - availableKB
 
-	return fmt.Sprintf("%.2f GiB / %.2f GiB %s(%.0f%%)%s", usedGiB, totalGiB, "\033[35m", percent, "\033[0m")
+	totalGiB := float64(totalKB) / 1024 / 1024
+	usedGiB := float64(usedKB) / 1024 / 1024
+	percent := (float64(usedKB) / float64(totalKB)) * 100
+
+	return sprintfMem(usedGiB, totalGiB, percent)
 }
 
-func parseMemLine(line string) uint64 {
-	fields := strings.Fields(line)
-	if len(fields) < 2 {
+func parseMemBytes(data []byte, prefix []byte) uint64 {
+	idx := bytes.Index(data, prefix)
+	if idx == -1 {
 		return 0
 	}
-	val, _ := strconv.ParseUint(fields[1], 10, 64)
+
+	ptr := data[idx+len(prefix):]
+
+	i := 0
+	for i < len(ptr) && (ptr[i] == ' ' || ptr[i] == '\t') {
+		i++
+	}
+
+	var val uint64 = 0
+	for i < len(ptr) && ptr[i] >= '0' && ptr[i] <= '9' {
+		val = val*10 + uint64(ptr[i]-'0')
+		i++
+	}
+
 	return val
+}
+
+func sprintfMem(used, total, percent float64) string {
+	return appendFormat(used, total, percent)
+}
+
+func appendFormat(used, total, percent float64) string {
+	return fmt.Sprintf("%.2f GiB / %.2f GiB \033[35m(%.0f%%)\033[0m", used, total, percent)
 }
