@@ -1,33 +1,71 @@
 package machine
 
 import (
-	"bufio"
-	"os"
-	"strings"
+	"bytes"
+	"syscall"
 )
 
 func GetCPU() string {
-	file, err := os.Open("/proc/cpuinfo")
-	if err != nil {
-		return "unknown"
-	}
-	defer file.Close()
+	var buf [2048]byte
 
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		line := scanner.Text()
-		if strings.HasPrefix(line, "model name") {
-			parts := strings.Split(line, ":")
-			if len(parts) > 1 {
-				name := strings.TrimSpace(parts[1])
-				name = strings.ReplaceAll(name, "(R)", "")
-				name = strings.ReplaceAll(name, "(TM)", "")
-				return name
-			}
+	fd, err := syscall.Open("/proc/cpuinfo", syscall.O_RDONLY, 0)
+	if err != nil {
+		return "Unknown"
+	}
+	defer syscall.Close(fd)
+
+	n, err := syscall.Read(fd, buf[:])
+	if err != nil || n == 0 {
+		return "Unknown"
+	}
+
+	data := buf[:n]
+	prefix := []byte("model name")
+
+	idx := bytes.Index(data, prefix)
+	if idx == -1 {
+		return "Unknown"
+	}
+
+	lineEnd := bytes.IndexByte(data[idx:], '\n')
+	if lineEnd == -1 {
+		lineEnd = len(data) - idx
+	}
+	line := data[idx : idx+lineEnd]
+
+	colonIdx := bytes.IndexByte(line, ':')
+	if colonIdx == -1 || colonIdx+1 >= len(line) {
+		return "Unknown"
+	}
+
+	val := line[colonIdx+1:]
+	for len(val) > 0 && (val[0] == ' ' || val[0] == '\t') {
+		val = val[1:]
+	}
+
+	w := 0
+	for i := 0; i < len(val); {
+		if i+3 <= len(val) && bytes.Equal(val[i:i+3], []byte("(R)")) {
+			i += 3
+			continue
 		}
+		if i+4 <= len(val) && bytes.Equal(val[i:i+4], []byte("(TM)")) {
+			i += 4
+			continue
+		}
+		val[w] = val[i]
+		w++
+		i++
 	}
-	if scanner.Err() != nil {
-		return "unknown"
+	finalBytes := val[:w]
+
+	for len(finalBytes) > 0 && (finalBytes[len(finalBytes)-1] == ' ' || finalBytes[len(finalBytes)-1] == '\r') {
+		finalBytes = finalBytes[:len(finalBytes)-1]
 	}
-	return "unknown"
+
+	if len(finalBytes) == 0 {
+		return "Unknown"
+	}
+
+	return string(finalBytes)
 }
