@@ -65,36 +65,36 @@ func main() {
 	var infoLines []string
 
 	usrhost := fmt.Sprintf("%s%s%s@%s%s%s", Italic+bCyan, userinfo[0], Cyan, Italic+bCyan, hostname, Reset) // user and hostname spaced by @
-	spacer := strings.Repeat("-", len(userinfo[0]+hostname)+1)
+	spacer := strings.Repeat("~", len(userinfo[0]+hostname)+1)
 	infoLines = append(
 		infoLines,
 		usrhost,
 		spacer,
-		fmt.Sprintf("~ %sOS:%s %s - %s %s(%s)%s", Bold+Cyan, Reset, osinfo.PrName, osinfo.BuildID, Magenta, osinfo.Arch, Reset),
-		fmt.Sprintf("~ %sHost:%s %s at %s", Bold+Cyan, Reset, userinfo[1], realhost),
-		fmt.Sprintf("~ %sKernel:%s %s", Bold+Cyan, Reset, kernel),
-		fmt.Sprintf("~ %sUptime:%s %s", Bold+Cyan, Reset, uptime),
-		fmt.Sprintf("~ %sPackages:%s %s", Bold+Cyan, Reset, pkgs),
-		fmt.Sprintf("~ %sSession:%s %s %s", Bold+Cyan, Reset, sesName, sesType),
-		fmt.Sprintf("~ %sShell:%s %s", Bold+Cyan, Reset, shell),
-		fmt.Sprintf("~ %sCPU:%s %s", Bold+Cyan, Reset, cpuName),
-		fmt.Sprintf("~ %sMemory:%s %s", Bold+Cyan, Reset, memUsage))
+		fmt.Sprintf("> %sOS:%s %s - %s %s(%s)%s", Bold+Cyan, Reset, osinfo.PrName, osinfo.BuildID, Magenta, osinfo.Arch, Reset),
+		fmt.Sprintf("> %sHost:%s %s at %s", Bold+Cyan, Reset, userinfo[1], realhost),
+		fmt.Sprintf("> %sKernel:%s %s", Bold+Cyan, Reset, kernel),
+		fmt.Sprintf("> %sUptime:%s %s", Bold+Cyan, Reset, uptime),
+		fmt.Sprintf("> %sPackages:%s %s", Bold+Cyan, Reset, pkgs),
+		fmt.Sprintf("> %sSession:%s %s %s", Bold+Cyan, Reset, sesName, sesType),
+		fmt.Sprintf("> %sShell:%s %s", Bold+Cyan, Reset, shell),
+		fmt.Sprintf("> %sCPU:%s %s", Bold+Cyan, Reset, cpuName),
+		fmt.Sprintf("> %sMemory:%s %s", Bold+Cyan, Reset, memUsage))
 	if len(swapsInfo) == 0 {
-		infoLines = append(infoLines, fmt.Sprintf("~ %sSwap:%s %sDisabled%s", Bold+Cyan, Reset, bRed, Reset))
+		infoLines = append(infoLines, fmt.Sprintf("> %sSwap:%s %sDisabled%s", Bold+Cyan, Reset, bRed, Reset))
 	} else {
 		for _, swap := range swapsInfo {
-			infoLines = append(infoLines, fmt.Sprintf("~ %sSwap %s(%s)%s:%s %.2f GiB / %.2f GiB %s(%s)%s",
+			infoLines = append(infoLines, fmt.Sprintf("> %sSwap %s(%s)%s:%s %.2f GiB / %.2f GiB %s(%s)%s",
 				Bold+Cyan, Magenta, swap.Name, Reset+Bold+Cyan, Reset, swap.Used, swap.Size, Magenta, swap.Percent, Reset))
 		}
 	}
 	infoLines = append(
 		infoLines,
-		fmt.Sprintf("~ %sHome:%s %s", Bold+Cyan, Reset, home),
-		fmt.Sprintf("~ %sPWD:%s %s", Bold+Cyan, Reset, pwd),
-		fmt.Sprintf("~ %sLocale:%s %s", Bold+Cyan, Reset, locale),
+		fmt.Sprintf("> %sHome:%s %s", Bold+Cyan, Reset, home),
+		fmt.Sprintf("> %sPWD:%s %s", Bold+Cyan, Reset, pwd),
+		fmt.Sprintf("> %sLocale:%s %s", Bold+Cyan, Reset, locale),
 	)
 	for _, mount := range mounts {
-		infoLines = append(infoLines, fmt.Sprintf("~ %sDrive %s(%s, %s)%s:%s %.2f GiB / %.2f GiB %s(%.0f%%)%s",
+		infoLines = append(infoLines, fmt.Sprintf("> %sDrive %s(%s, %s)%s:%s %.2f GiB / %.2f GiB %s(%.0f%%)%s",
 			Bold+Cyan, Magenta, mount.MountPoint, mount.FSType, Reset+Cyan+Bold, Reset, mount.Used, mount.Total, Magenta, mount.Percentage, Reset))
 	}
 	infoLines = append(infoLines, "",
