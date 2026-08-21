@@ -65,7 +65,7 @@ func main() {
 	var infoLines []string
 
 	usrhost := fmt.Sprintf("%s%s%s@%s%s%s", Italic+bCyan, userinfo[0], Cyan, Italic+bCyan, hostname, Reset) // user and hostname spaced by @
-	spacer := strings.Repeat("~", len(userinfo[0]+hostname)+1)
+	spacer := fmt.Sprintf("%s%s%s", Blue, strings.Repeat("~", len(userinfo[0]+hostname)+1), Reset)
 	infoLines = append(
 		infoLines,
 		usrhost,
