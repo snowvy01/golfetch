@@ -15,13 +15,13 @@ func GetMemoryUsage() string {
 
 	fd, err := syscall.Open("/proc/meminfo", syscall.O_RDONLY, 0)
 	if err != nil {
-		return "unknown"
+		return "Unknown"
 	}
 	defer syscall.Close(fd)
 
 	n, err := syscall.Read(fd, buf[:])
 	if err != nil || n == 0 {
-		return "unknown"
+		return "Unknown"
 	}
 
 	data := buf[:n]
@@ -81,7 +81,6 @@ func GetSwap() []Swapinfo {
 	var swaps []Swapinfo
 	scanner := bufio.NewScanner(file)
 
-	// Skip the header line ("Filename Type Size Used Priority")
 	if !scanner.Scan() {
 		return []Swapinfo{}
 	}
