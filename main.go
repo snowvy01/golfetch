@@ -80,7 +80,7 @@ func main() {
 		fmt.Sprintf("> %sCPU:%s %s", Bold+Cyan, Reset, cpuName),
 		fmt.Sprintf("> %sMemory:%s %s", Bold+Cyan, Reset, memUsage))
 	if len(swapsInfo) == 0 {
-		infoLines = append(infoLines, fmt.Sprintf("> %sSwap:%s %sDisabled%s", Bold+Cyan, Reset, bRed, Reset))
+		infoLines = append(infoLines, fmt.Sprintf("> %sSwap:%s %sDisabled%s / %sNot found%s", Bold+Cyan, Reset, bRed, Reset, bRed, Reset))
 	} else {
 		for _, swap := range swapsInfo {
 			infoLines = append(infoLines, fmt.Sprintf("> %sSwap %s(%s)%s:%s %.2f GiB / %.2f GiB %s(%s)%s",
