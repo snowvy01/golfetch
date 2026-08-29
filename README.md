@@ -10,6 +10,8 @@ components and compile it
 > Note: golfetch is only tested on x86_64 platforms by maintainer (me).
 It will most likely run on other platforms, but there is no guarantee.
 
+![Main screenshot of golfetch (made on 29 August in 2026)](screenshots/screen_20260829.png)
+
 ## Installation
 
 ### Manual build
