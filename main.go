@@ -49,6 +49,7 @@ func main() {
 	pkgs := sys.GetPacmanPkgs()
 
 	cpuName := machine.GetCPU()
+	gpus := machine.GetGPUs()
 	memUsage := machine.GetMemoryUsage()
 	swapsInfo := machine.GetSwap()
 
@@ -57,6 +58,7 @@ func main() {
 	realhost := user.GetRealHostname()
 	sesName, sesType := user.GetSession()
 	shell := user.GetShell()
+	term := user.GetTerminal()
 	home := user.GetHome()
 	pwd := user.GetPWD()
 	locale := user.GetLocale()
@@ -77,7 +79,13 @@ func main() {
 		fmt.Sprintf("> %sPackages:%s %s", Bold+Cyan, Reset, pkgs),
 		fmt.Sprintf("> %sSession:%s %s %s", Bold+Cyan, Reset, sesName, sesType),
 		fmt.Sprintf("> %sShell:%s %s", Bold+Cyan, Reset, shell),
-		fmt.Sprintf("> %sCPU:%s %s", Bold+Cyan, Reset, cpuName),
+		fmt.Sprintf("> %sTerminal:%s %s", Bold+Cyan, Reset, term),
+		fmt.Sprintf("> %sCPU:%s %s", Bold+Cyan, Reset, cpuName))
+	for _, gpu := range gpus {
+		infoLines = append(infoLines, fmt.Sprintf("> %sGPU:%s %s", Bold+Cyan, Reset, gpu))
+	}
+	infoLines = append(
+		infoLines,
 		fmt.Sprintf("> %sMemory:%s %s", Bold+Cyan, Reset, memUsage))
 	if len(swapsInfo) == 0 {
 		infoLines = append(infoLines, fmt.Sprintf("> %sSwap:%s %sDisabled%s / %sNot found%s", Bold+Cyan, Reset, bRed, Reset, bRed, Reset))
