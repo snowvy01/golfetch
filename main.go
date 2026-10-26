@@ -7,7 +7,6 @@ package main
 import (
 	// These are basic packages. You can remove them if you do not need them (Be sure if program will work without them before deleting):
 	"fmt"
-	"os"
 	"strings"
 
 	// Packages from golfetch/modules (Change them how do you want):
@@ -16,8 +15,6 @@ import (
 	"golfetch/modules/sys"
 	"golfetch/modules/user"
 )
-
-var GitCommit = "dev"
 
 // Ansi escapes
 const (
@@ -46,11 +43,6 @@ const (
 )
 
 func main() {
-	if len(os.Args) > 1 && (os.Args[1] == "--version" || os.Args[1] == "-v") {
-		fmt.Printf("Github commit hash sum: %s\n", GitCommit)
-		os.Exit(0)
-	}
-
 	osinfo := sys.GetDistribution()
 	kernel := sys.GetKernelVer()
 	uptime := sys.GetUptime()
