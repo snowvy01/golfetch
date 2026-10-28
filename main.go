@@ -63,6 +63,7 @@ func main() {
 	pwd := user.GetPWD()
 	locale := user.GetLocale()
 	mounts := machine.GetFSSystems()
+	batteries := machine.GetBattery()
 
 	var infoLines []string
 
@@ -84,9 +85,7 @@ func main() {
 	for _, gpu := range gpus {
 		infoLines = append(infoLines, fmt.Sprintf("> %sGPU:%s %s", Bold+Cyan, Reset, gpu))
 	}
-	infoLines = append(
-		infoLines,
-		fmt.Sprintf("> %sMemory:%s %s", Bold+Cyan, Reset, memUsage))
+	infoLines = append(infoLines, fmt.Sprintf("> %sMemory:%s %s", Bold+Cyan, Reset, memUsage))
 	if len(swapsInfo) == 0 {
 		infoLines = append(infoLines, fmt.Sprintf("> %sSwap:%s %sDisabled%s / %sNot found%s", Bold+Cyan, Reset, bRed, Reset, bRed, Reset))
 	} else {
@@ -95,16 +94,20 @@ func main() {
 				Bold+Cyan, Magenta, swap.Name, Reset+Bold+Cyan, Reset, swap.Used, swap.Size, Magenta, swap.Percent, Reset))
 		}
 	}
+	for _, mount := range mounts {
+		infoLines = append(infoLines, fmt.Sprintf("> %sDrive %s(%s, %s)%s:%s %.2f GiB / %.2f GiB %s(%.0f%%)%s",
+			Bold+Cyan, Magenta, mount.MountPoint, mount.FSType, Reset+Cyan+Bold, Reset, mount.Used, mount.Total, Magenta, mount.Percentage, Reset))
+	}
+	for _, battery := range batteries {
+		infoLines = append(infoLines, fmt.Sprintf("> %sBattery %s(%s - %s, %s)%s:%s %s%% %s(%s)%s",
+			Bold+Cyan, Magenta, battery[2], battery[3], battery[4], Reset+Cyan+Bold, Reset, battery[0], Magenta, battery[1], Reset))
+	}
 	infoLines = append(
 		infoLines,
 		fmt.Sprintf("> %sHome:%s %s", Bold+Cyan, Reset, home),
 		fmt.Sprintf("> %sPWD:%s %s", Bold+Cyan, Reset, pwd),
 		fmt.Sprintf("> %sLocale:%s %s", Bold+Cyan, Reset, locale),
 	)
-	for _, mount := range mounts {
-		infoLines = append(infoLines, fmt.Sprintf("> %sDrive %s(%s, %s)%s:%s %.2f GiB / %.2f GiB %s(%.0f%%)%s",
-			Bold+Cyan, Magenta, mount.MountPoint, mount.FSType, Reset+Cyan+Bold, Reset, mount.Used, mount.Total, Magenta, mount.Percentage, Reset))
-	}
 	infoLines = append(infoLines, "",
 		fmt.Sprintf("%s███%s███%s███%s███%s███%s███%s███%s███%s", Black, Red, Green, Yellow, Blue, Magenta, Cyan, White, Reset),
 		fmt.Sprintf("%s███%s███%s███%s███%s███%s███%s███%s███%s", bBlack, bRed, bGreen, bYellow, bBlue, bMagenta, bCyan, bWhite, Reset))
