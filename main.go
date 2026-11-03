@@ -63,7 +63,7 @@ func main() {
 	pwd := user.GetPWD()
 	locale := user.GetLocale()
 	mounts := machine.GetFSSystems()
-	batteries := machine.GetBattery()
+	// batteries := machine.GetBattery()
 
 	var infoLines []string
 
@@ -98,10 +98,10 @@ func main() {
 		infoLines = append(infoLines, fmt.Sprintf("> %sDrive %s(%s, %s)%s:%s %.2f GiB / %.2f GiB %s(%.0f%%)%s",
 			Bold+Cyan, Magenta, mount.MountPoint, mount.FSType, Reset+Cyan+Bold, Reset, mount.Used, mount.Total, Magenta, mount.Percentage, Reset))
 	}
-	for _, battery := range batteries {
-		infoLines = append(infoLines, fmt.Sprintf("> %sBattery %s(%s - %s, %s)%s:%s %s%% %s(%s)%s",
-			Bold+Cyan, Magenta, battery[2], battery[3], battery[4], Reset+Cyan+Bold, Reset, battery[0], Magenta, battery[1], Reset))
-	}
+	// for _, battery := range batteries {
+	// 	infoLines = append(infoLines, fmt.Sprintf("> %sBattery %s(%s - %s, %s)%s:%s %s%% %s(%s)%s",
+	// 		Bold+Cyan, Magenta, battery[2], battery[3], battery[4], Reset+Cyan+Bold, Reset, battery[0], Magenta, battery[1], Reset))
+	// }
 	infoLines = append(
 		infoLines,
 		fmt.Sprintf("> %sHome:%s %s", Bold+Cyan, Reset, home),
